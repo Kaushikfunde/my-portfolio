@@ -125,24 +125,19 @@ const Nav = () => {
         </div>
       </nav>
 
-      {/* FIXED: Mobile Menu Overlay 
-          - Added 'bg-black' (solid color) to fix transparency issue 
-          - Increased z-index to z-[100] to ensure it sits on top of everything
-      */}
+      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[100] bg-black flex flex-col justify-center items-center p-6 animate-in fade-in duration-200 touch-none">
             {/* Close button */}
-            {/* Mobile Menu 'Hire Me' Link */}
-                <a 
-                  href="https://www.linkedin.com/in/kaushik-funde-239925373/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onClick={() => setIsMenuOpen(false)} 
-                  className="bg-white text-black px-8 py-4 rounded-full text-xl font-bold                 hover:bg-zinc-200 transition-all w-full text-center block"
-                >
-                  Hire Me
-                </a>                
+            <button 
+              onClick={() => setIsMenuOpen(false)}
+              className="absolute top-5 right-6 p-3 text-white hover:bg-zinc-800 rounded-full transition-colors"
+            >
+              <X size={32} />
+            </button>
+
             <div className="flex flex-col gap-8 text-center w-full max-w-sm">
+                {/* Navigation Links */}
                 {navLinks.map((item) => (
                     <a 
                     key={item} 
@@ -153,13 +148,24 @@ const Nav = () => {
                     {item}
                     </a>
                 ))}
+                
+                {/* Divider Line */}
                 <div className="h-px bg-white/10 w-full my-4" />
-                <button className="bg-white text-black px-8 py-4 rounded-full text-xl font-bold hover:bg-zinc-200 transition-all w-full">
-                    Hire Me
-                </button>
+                
+                {/* SINGLE Hire Me Button at the bottom */}
+                <a 
+                  href="https://www.linkedin.com/in/your-profile-url/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={() => setIsMenuOpen(false)} 
+                  className="bg-white text-black px-8 py-4 rounded-full text-xl font-bold hover:bg-zinc-200 transition-all w-full text-center block"
+                >
+                  Hire Me
+                </a>
             </div>
         </div>
       )}
+      
     </>
   );
 };
