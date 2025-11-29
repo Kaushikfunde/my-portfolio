@@ -1,16 +1,5 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Kaushik Funde - Engineering Portfolio🚀 OverviewA high-performance, hardware-accelerated personal portfolio website designed to bridge the gap between Embedded Systems and Modern Web Development.Built with a focus on micro-interactions, mobile responsiveness, and GPU-optimized animations, this site serves as a digital showcase for my work in IoT, Firmware, and Full-Stack Engineering.✨ Key Features⚡ Zero-Lag Animations: Custom CSS implementation using translate-z-0 and will-change-transform to force GPU hardware acceleration, ensuring 60FPS performance even on mobile devices.🎨 Vercel-Inspired Aesthetic: A clean, industrial design system utilizing a monochromatic palette with high-saturation accent gradients.📱 Mobile-First Architecture: A fully responsive layout featuring a custom glass-morphism mobile navigation drawer and touch-optimized targets.🔧 Tech Stack Display: Integrated DevIcons for high-fidelity, official brand representation of tools like MATLAB, KiCad, and Docker.🛠️ Tech StackFramework: React 18Build Tool: ViteStyling: Tailwind CSSIcons: Lucide React & DevIconDeployment: Vercel🏃‍♂️ Running LocallyClone the repositorygit clone [https://github.com/yourusername/portfolio.git](https://github.com/yourusername/portfolio.git)
+cd portfolio
+Install dependenciesnpm install
+Start the development servernpm run dev
+🚢 DeploymentThis project is configured for seamless deployment on Vercel.Push code to GitHub.Import repository into Vercel.Vercel will automatically detect the Vite settings and deploy.Designed & Engineered by Kaushik Funde.
