@@ -638,7 +638,7 @@ const Footer = () => (
           </div>
           <div className="flex items-center gap-2 text-xs text-zinc-500">
               <BookOpen size={14} />
-              <span>Learning: FPGA & Verilog</span>
+              <span>Learning: Python & Django</span>
           </div>
         </div>
 
