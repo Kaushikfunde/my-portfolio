@@ -1,60 +1,60 @@
-Kaushik Funde - Engineering Portfolio
+# Kaushik Funde — Engineering Portfolio
 
-🚀 Overview
+A single-page portfolio showcasing work across embedded systems, IoT, and modern web development.
 
-A high-performance, hardware-accelerated personal portfolio website designed to bridge the gap between Embedded Systems and Modern Web Development.
+**Live site:** https://my-portfolio-nu-flame-97.vercel.app
 
-Built with a focus on micro-interactions, mobile responsiveness, and GPU-optimized animations, this site serves as a digital showcase for my work in IoT, Firmware, and Full-Stack Engineering.
+## Overview
 
-✨ Key Features
+The site bridges hardware and software: ESP32/IoT projects, firmware, PCB design, and full-stack web applications. It is built as a fast, responsive single-page React app with scroll-triggered animations and a dark, monochromatic design.
 
-⚡ Zero-Lag Animations: Custom CSS implementation using translate-z-0 and will-change-transform to force GPU hardware acceleration, ensuring 60FPS performance even on mobile devices.
+## Features
 
-🎨 Vercel-Inspired Aesthetic: A clean, industrial design system utilizing a monochromatic palette with high-saturation accent gradients.
+- Scroll-reveal animations powered by `IntersectionObserver`
+- Responsive layout with a full-screen mobile navigation menu
+- Project showcase, experience and education timelines, tool stack, and skills
+- Contact form powered by Web3Forms
+- Accessible form labels, landmarks, focus states, and reduced-motion support
 
-📱 Mobile-First Architecture: A fully responsive layout featuring a custom glass-morphism mobile navigation drawer and touch-optimized targets.
+## Tech Stack
 
-🔧 Tech Stack Display: Integrated DevIcons for high-fidelity, official brand representation of tools like MATLAB, KiCad, and Docker.
+- **Framework:** React 19
+- **Build tool:** Vite 7
+- **Styling:** Tailwind CSS 3
+- **Icons:** Lucide React, DevIcon, Simple Icons
+- **Contact:** Web3Forms
+- **Deployment:** Vercel
 
-🛠️ Tech Stack
+## Running Locally
 
-Framework: React 18
-
-Build Tool: Vite
-
-Styling: Tailwind CSS
-
-Icons: Lucide React & DevIcon
-
-Deployment: Vercel
-
-🏃‍♂️ Running Locally
-
-Clone the repository
-
-git clone [https://github.com/yourusername/portfolio.git](https://github.com/yourusername/portfolio.git)
-
-cd portfolio
-
-
-Install dependencies
-
+```bash
+git clone https://github.com/Kaushikfunde/my-portfolio.git
+cd my-portfolio
 npm install
-
-
-Start the development server
-
 npm run dev
+```
 
+The dev server runs at `http://localhost:5173`.
 
-🚢 Deployment
+Create a production build with:
 
-This project is configured for seamless deployment on Vercel.
+```bash
+npm run build
+npm run preview
+```
 
-Push code to GitHub.
+## Deployment
 
-Import repository into Vercel.
+The repository is connected to Vercel. Pushing to `main` triggers a production deployment automatically.
 
-Vercel will automatically detect the Vite settings and deploy.
+## License
 
-Designed & Engineered by Kaushik Funde.
+This project is proprietary. Copyright © 2026 Kaushik Funde. All rights reserved.
+
+No part of this website, its source code, design, or content may be copied, reproduced, modified, distributed, or reused without prior written permission. View the full terms in [LICENSE](./LICENSE).
+
+Third-party dependencies remain under their own licenses.
+
+---
+
+Designed & engineered by Kaushik Funde.

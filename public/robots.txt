@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://my-portfolio-nu-flame-97.vercel.app/sitemap.xml
