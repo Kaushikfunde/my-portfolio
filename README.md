@@ -2,7 +2,7 @@
 
 A single-page portfolio showcasing work across embedded systems, IoT, and modern web development.
 
-**Live site:** https://my-portfolio-nu-flame-97.vercel.app
+**Live site:** https://kaushikfunde.vercel.app
 
 ## Overview
 
