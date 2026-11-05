@@ -57,7 +57,7 @@ export default function useSmoothScroll() {
 
       event.preventDefault();
       lenis.start();
-      lenis.scrollTo(target, { offset: -76, duration: 1.25 });
+      lenis.scrollTo(target, { duration: 1.25 });
       history.replaceState(null, '', href);
     };
 
@@ -72,7 +72,7 @@ export default function useSmoothScroll() {
       const target = document.querySelector(initialHash);
       if (target) {
         requestAnimationFrame(() => {
-          lenis.scrollTo(target, { offset: -76, immediate: true });
+          lenis.scrollTo(target, { immediate: true });
           ScrollTrigger.refresh();
         });
       }

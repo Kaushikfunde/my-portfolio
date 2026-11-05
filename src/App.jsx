@@ -1375,7 +1375,7 @@ export default function App() {
             -webkit-text-size-adjust: 100%;
           }
           
-          html { scroll-behavior: auto; overflow-x: clip; scrollbar-gutter: stable; scroll-padding-top: 6rem; }
+          html { scroll-behavior: auto; overflow-x: clip; scrollbar-gutter: stable; }
           
           .animate-fade-in-up {
             animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
