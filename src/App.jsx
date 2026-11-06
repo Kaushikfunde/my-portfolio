@@ -348,7 +348,7 @@ const About = () => {
       <div ref={blobRef} className="absolute top-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
       
     <div className="max-w-6xl mx-auto relative z-10">
-      <ScrollWordReveal className="text-3xl md:text-4xl font-bold text-white mb-10 md:mb-12">About Kaushik Funde</ScrollWordReveal>
+      <ScrollWordReveal className="text-3xl md:text-4xl font-bold text-white mb-10 md:mb-12">About Me</ScrollWordReveal>
 
       <div className="grid md:grid-cols-12 gap-12 items-start">
         {/* Left Column: Bio */}
