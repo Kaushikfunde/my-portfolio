@@ -7,7 +7,7 @@ import {
   Github, Twitter, Linkedin, ArrowUpRight, Mail, BookOpen, Download,
   Cpu, CircuitBoard, Command, Zap, Terminal, Layers, Globe, Code,
   Send, Loader, CheckCircle, GraduationCap, Menu, X, 
-  User, Heart 
+  User, Heart, MapPin
 } from 'lucide-react';
 import useSmoothScroll from './hooks/useSmoothScroll';
 import Manifesto from './components/Manifesto';
@@ -298,9 +298,9 @@ const Hero = () => (
         </h1>
         
         <p className="hero-subhead text-base sm:text-lg md:text-xl text-zinc-300 max-w-2xl mb-10 leading-relaxed drop-shadow-lg mx-auto md:mx-0">
-          Bridging the gap between silicon and software.
+          Electronics engineering student in Nagpur.
           <br />
-          I design embedded systems, lay out custom PCBs, and write the firmware that brings them to life.
+          I design embedded systems, custom PCBs, and full-stack web applications.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start w-full">
@@ -310,7 +310,7 @@ const Hero = () => (
           <a href="/resume.pdf" download title="Download resume (PDF)" className="hero-btn h-12 px-8 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm text-white font-medium flex items-center justify-center gap-2 hover:bg-black hover:border-white transition-all active:scale-95 duration-200 w-full sm:w-auto hover:-translate-y-1">
             <Download size={18} /> Résumé
           </a>
-          <a href="https://github.com/Kaushikfunde" target="_blank" rel="noreferrer" className="hero-btn h-12 px-8 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm text-white font-medium flex items-center justify-center gap-2 hover:bg-black hover:border-white transition-all active:scale-95 duration-200 w-full sm:w-auto hover:-translate-y-1">
+          <a href="https://github.com/Kaushikfunde" target="_blank" rel="me noopener noreferrer" className="hero-btn h-12 px-8 rounded-full border border-white/20 bg-black/50 backdrop-blur-sm text-white font-medium flex items-center justify-center gap-2 hover:bg-black hover:border-white transition-all active:scale-95 duration-200 w-full sm:w-auto hover:-translate-y-1">
             <Github size={18} /> GitHub
           </a>
         </div>
@@ -348,14 +348,14 @@ const About = () => {
       <div ref={blobRef} className="absolute top-0 right-0 w-96 h-96 bg-blue-900/10 rounded-full blur-[100px] pointer-events-none" />
       
     <div className="max-w-6xl mx-auto relative z-10">
-      <ScrollWordReveal className="text-3xl md:text-4xl font-bold text-white mb-10 md:mb-12">About Me</ScrollWordReveal>
+      <ScrollWordReveal className="text-3xl md:text-4xl font-bold text-white mb-10 md:mb-12">About Kaushik Funde</ScrollWordReveal>
 
       <div className="grid md:grid-cols-12 gap-12 items-start">
         {/* Left Column: Bio */}
         <div className="md:col-span-7 space-y-6">
           <ScrollReveal delay={100}>
             <p className="text-zinc-400 text-lg leading-relaxed">
-              I'm a <span className="text-white font-medium">second-year Electronics Engineering student</span> at G. H. Raisoni College of Engineering, Nagpur, with a deep passion for the intersection of hardware and software. 
+              I'm <span className="text-white font-medium">Kaushik Funde</span>, a second-year Electronics Engineering student at G. H. Raisoni College of Engineering, Nagpur, with a deep passion for the intersection of hardware and software. 
             </p>
             <p className="text-zinc-400 text-lg leading-relaxed mt-4">
               My journey began with dismantling household electronics to see how they worked, which naturally evolved into designing my own circuits and eventually writing the software that brings them to life.
@@ -1297,6 +1297,10 @@ const Footer = () => {
               <BookOpen size={14} />
               <span>Learning: Python & Django</span>
           </div>
+          <div className="flex items-center gap-2 text-xs text-zinc-400">
+              <MapPin size={14} />
+              <span>Nagpur, Maharashtra, India</span>
+          </div>
         </div>
 
         {/* --- UPDATED SOCIAL LINKS SECTION --- */}
@@ -1305,9 +1309,9 @@ const Footer = () => {
           <a 
             href="https://x.com/KaushikFunde" 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="text-zinc-400 transition-all hover:scale-110 hover:text-blue-400"
-            aria-label="Twitter"
+            aria-label="Kaushik Funde on X"
           >
             <Twitter size={20} />
           </a>
@@ -1316,9 +1320,9 @@ const Footer = () => {
           <a 
             href="https://www.linkedin.com/in/kaushik-funde-239925373/" 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="text-zinc-400 transition-all hover:scale-110 hover:text-blue-600"
-            aria-label="LinkedIn"
+            aria-label="Kaushik Funde on LinkedIn"
           >
             <Linkedin size={20} />
           </a>
@@ -1327,9 +1331,9 @@ const Footer = () => {
           <a 
             href="https://github.com/Kaushikfunde" 
             target="_blank" 
-            rel="noopener noreferrer"
+            rel="me noopener noreferrer"
             className="text-zinc-400 hover:text-white transition-all hover:scale-110"
-            aria-label="GitHub"
+            aria-label="Kaushik Funde on GitHub"
           >
             <Github size={20} />
           </a>
