@@ -82,7 +82,7 @@ const ScrollWordReveal = ({ children, className = "" }) => {
     }
 
     const words = element.textContent.trim().split(/\s+/);
-    element.innerHTML = words.map((w) => `<span class="word-char">${w}</span>`).join('');
+    element.innerHTML = words.map((w) => `<span class="word-char">${w}</span>`).join(' ');
 
     const doReveal = () => {
       if (revealedRef.current) return;
