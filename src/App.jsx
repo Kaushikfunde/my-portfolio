@@ -6,7 +6,7 @@ import { CSSPlugin } from 'gsap/CSSPlugin';
 import { 
   Github, Twitter, Linkedin, ArrowUpRight, Mail, BookOpen, Download,
   Cpu, CircuitBoard, Command, Zap, Terminal, Layers, Globe, Code,
-  Send, Loader, CheckCircle, GraduationCap, Menu, X, 
+  Send, Loader, CheckCircle, GraduationCap, X,
   User, Heart, MapPin
 } from 'lucide-react';
 import useSmoothScroll from './hooks/useSmoothScroll';
@@ -125,18 +125,145 @@ const ScrollWordReveal = ({ children, className = "" }) => {
 
 // --- Components ---
 
+const navLinks = ['About', 'Projects', 'Experience', 'Education', 'Tools', 'Skills', 'Contact'];
+
 const Nav = () => {
-  const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const barRef = useRef(null);
+  const brandRef = useRef(null);
+  const linksRef = useRef(null);
+  const rightRef = useRef(null);
+  const pillRef = useRef(null);
+  const inkRef = useRef(null);
+  const linkRefs = useRef([]);
 
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const bar = barRef.current;
+    if (!bar) return undefined;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    let frame = 0;
+
+    const measure = () => {
+      const brand = brandRef.current;
+      const links = linksRef.current;
+      const right = rightRef.current;
+      if (!brand || !right) return;
+
+      const styles = getComputedStyle(bar);
+      const compactPad = parseFloat(styles.getPropertyValue('--nav-pad-compact')) || 14;
+      const gap = parseFloat(styles.getPropertyValue('--nav-gap')) || 16;
+      const isDesktop = desktop.matches;
+      const compactWidth =
+        brand.offsetWidth +
+        (isDesktop ? links?.offsetWidth || 0 : 0) +
+        right.offsetWidth +
+        gap * (isDesktop ? 2 : 1) +
+        compactPad * 2;
+
+      bar.style.setProperty('--nav-cw', `${Math.ceil(compactWidth)}px`);
+    };
+
+    const smoothstep = (value) => {
+      const t = Math.min(1, Math.max(0, value));
+      return t * t * (3 - 2 * t);
+    };
+
+    const update = () => {
+      frame = 0;
+      const y = window.scrollY || 0;
+
+      // Scroll spy: highlight the section whose top has passed just below
+      // the fixed nav. A small fixed offset tracks anchor scrolls closely.
+      const probe = y + 120;
+      let nextActive = -1;
+      for (let i = 0; i < navLinks.length; i += 1) {
+        const section = document.getElementById(navLinks[i].toLowerCase());
+        if (!section) continue;
+        const top = section.getBoundingClientRect().top + y;
+        if (probe >= top) nextActive = i;
+      }
+      setActiveIndex((prev) => (prev === nextActive ? prev : nextActive));
+
+      if (reduceMotion.matches) {
+        bar.style.setProperty('--nav-m', '0');
+        bar.style.setProperty('--nav-mg', y > 20 ? '1' : '0');
+        return;
+      }
+
+      bar.style.setProperty('--nav-m', smoothstep(y / 300).toFixed(4));
+      bar.style.setProperty('--nav-mg', smoothstep(y / 90).toFixed(4));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+
+    measure();
+    update();
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+    desktop.addEventListener?.('change', onResize);
+    reduceMotion.addEventListener?.('change', onScroll);
+    document.fonts?.ready.then(measure).catch(() => {});
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onResize);
+      desktop.removeEventListener?.('change', onResize);
+      reduceMotion.removeEventListener?.('change', onScroll);
+    };
   }, []);
+
+  // Slide the white pill under the active section link and clip the
+  // black-text overlay to the same rectangle so the label inverts.
+  useEffect(() => {
+    const links = linksRef.current;
+    const pill = pillRef.current;
+    const ink = inkRef.current;
+    if (!links || !pill || !ink) return undefined;
+
+    const place = () => {
+      if (!links.offsetWidth) return;
+
+      if (activeIndex < 0) {
+        pill.style.opacity = '0';
+        ink.style.opacity = '0';
+        return;
+      }
+
+      const el = linkRefs.current[activeIndex];
+      if (!el) return;
+
+      const left = el.offsetLeft;
+      const width = el.offsetWidth;
+
+      pill.style.width = `${width}px`;
+      pill.style.transform = `translate3d(${left}px, -50%, 0)`;
+      pill.style.opacity = '1';
+
+      ink.style.clipPath = `inset(0 ${links.clientWidth - (left + width)}px 0 ${left}px)`;
+      ink.style.opacity = '1';
+    };
+
+    place();
+    window.addEventListener('resize', place);
+    document.fonts?.ready.then(place).catch(() => {});
+
+    return () => window.removeEventListener('resize', place);
+  }, [activeIndex]);
 
   const scrollToTop = () => {
     if (window.__lenis) {
@@ -160,66 +287,100 @@ const Nav = () => {
     };
   }, [isMenuOpen]);
 
-  const navLinks = ['About','Projects', 'Experience', 'Education', 'Tools', 'Skills', 'Contact'];
+  // Close the menu with Escape.
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') setIsMenuOpen(false);
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isMenuOpen]);
+
+  // The hamburger (and its close action) is hidden on desktop, so close the
+  // full-screen menu if the viewport grows past the mobile breakpoint.
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    const onChange = (event) => {
+      if (event.matches) setIsMenuOpen(false);
+    };
+
+    desktop.addEventListener?.('change', onChange);
+    return () => desktop.removeEventListener?.('change', onChange);
+  }, []);
 
   return (
     <>
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-        scrolled 
-          ? 'bg-black/80 backdrop-blur-md border-white/10' 
-          : 'bg-transparent border-transparent'
-      }`}>
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          
-          {/* Logo */}
-          <button 
-            onClick={scrollToTop} 
-            className="flex items-center gap-3 font-bold text-xl tracking-tight text-white hover:opacity-80 transition-opacity cursor-pointer group z-50 relative"
-          >
-            <svg 
-              width="24" height="24" viewBox="0 0 75 65" fill="white" xmlns="http://www.w3.org/2000/svg"
-              className="group-hover:-translate-y-0.5 transition-transform duration-300"
+      <nav className="site-nav" aria-label="Primary">
+        <div ref={barRef} className="site-nav__bar">
+          <div className="site-nav__inner">
+
+            {/* Logo */}
+            <button
+              ref={brandRef}
+              onClick={scrollToTop}
+              className="flex shrink-0 items-center gap-3 font-bold text-xl tracking-tight text-white hover:opacity-80 transition-opacity cursor-pointer group"
             >
-              <path d="M37.59.25l36.95 64H.64l36.95-64z" />
-            </svg>
-            <span>Kaushik</span>
-          </button>
-          
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-medium text-zinc-400">
-            {navLinks.map((item) => (
-              <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`} 
-                className="hover:text-white transition-colors duration-200 hover:scale-105 transform"
+              <svg
+                width="24" height="24" viewBox="0 0 75 65" fill="white" xmlns="http://www.w3.org/2000/svg"
+                className="group-hover:-translate-y-0.5 transition-transform duration-300"
               >
+                <path d="M37.59.25l36.95 64H.64l36.95-64z" />
+              </svg>
+              <span>Kaushik</span>
+            </button>
+
+            {/* Desktop Nav */}
+            <div ref={linksRef} className="site-nav__links hidden lg:flex items-center text-sm font-medium text-zinc-400 whitespace-nowrap">
+              <span ref={pillRef} className="site-nav__pill" aria-hidden="true" />
+
+              {navLinks.map((item, index) => (
+                <a
+                  key={item}
+                  ref={(el) => { linkRefs.current[index] = el; }}
+                  href={`#${item.toLowerCase()}`}
+                  aria-current={activeIndex === index ? 'location' : undefined}
+                  className="site-nav__link"
+                >
                   {item}
+                </a>
+              ))}
+
+              <span ref={inkRef} className="site-nav__ink" aria-hidden="true">
+                {navLinks.map((item) => (
+                  <span key={item} className="site-nav__link">{item}</span>
+                ))}
+              </span>
+            </div>
+
+            {/* Desktop Hire Me + Mobile Menu Toggle */}
+            <div ref={rightRef} className="flex shrink-0 items-center gap-3">
+              <a
+                href="https://www.linkedin.com/in/kaushik-funde-239925373/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden lg:inline-block bg-white text-black px-5 py-2 rounded-full text-sm font-bold hover:bg-zinc-200 transition-all active:scale-95 duration-200"
+              >
+                Hire Me
               </a>
-            ))}
-          </div>
 
-          {/* Desktop Hire Me Button */}
-          <div className="hidden lg:block">
-            <a 
-              href="https://www.linkedin.com/in/kaushik-funde-239925373/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-white text-black px-5 py-2 rounded-full text-sm font-bold           hover:bg-zinc-200 transition-all active:scale-95 duration-200 inline-block"
-            >
-              Hire Me
-            </a>
+              <button
+                  className={`site-nav__burger lg:hidden flex items-center justify-center text-white ${isMenuOpen ? 'is-open' : ''}`}
+                  onClick={isMenuOpen ? closeMenu : openMenu}
+                  aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                  aria-expanded={isMenuOpen}
+                  aria-controls="mobile-menu"
+              >
+                  <span className="site-nav__burger-box" aria-hidden="true">
+                    <span className="site-nav__burger-line" />
+                    <span className="site-nav__burger-line" />
+                    <span className="site-nav__burger-line" />
+                  </span>
+              </button>
+            </div>
           </div>
-
-          {/* Mobile Menu Toggle */}
-          <button 
-              className="lg:hidden text-white z-50 relative p-2 -mr-2 hover:bg-white/10 rounded-lg transition-colors"
-              onClick={isMenuOpen ? closeMenu : openMenu}
-              aria-label="Toggle menu"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-          >
-              {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
         </div>
       </nav>
 
@@ -228,24 +389,16 @@ const Nav = () => {
         id="mobile-menu"
         aria-hidden={!isMenuOpen}
         inert={!isMenuOpen}
-        className={`fixed inset-0 z-[100] overflow-y-auto overscroll-contain bg-black p-6 py-24 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`mobile-menu fixed inset-0 z-[100] overflow-y-auto overscroll-contain bg-black p-6 py-24 ${isMenuOpen ? 'is-open' : ''}`}
       >
-          {/* Close button */}
-          <button 
-            onClick={closeMenu}
-            aria-label="Close menu"
-            className="fixed top-5 right-6 p-3 text-white hover:bg-zinc-800 rounded-full transition-colors"
-          >
-            <X size={32} />
-          </button>
-
           <div className="menu-inner mx-auto flex w-full max-w-sm flex-col items-center gap-5 text-center sm:gap-8">
               {/* Navigation Links */}
-              {navLinks.map((item) => (
+              {navLinks.map((item, index) => (
                   <a 
                   key={item} 
                   href={`#${item.toLowerCase()}`} 
                   onClick={closeMenu}
+                  style={{ '--menu-i': index }}
                   className="text-2xl sm:text-3xl font-bold text-zinc-400 hover:text-white transition-colors"
                   >
                   {item}
@@ -253,7 +406,10 @@ const Nav = () => {
               ))}
               
               {/* Divider Line */}
-              <div className="h-px bg-white/10 w-full my-2 sm:my-4" />
+              <div
+                className="h-px bg-white/10 w-full my-2 sm:my-4"
+                style={{ '--menu-i': navLinks.length }}
+              />
               
               {/* SINGLE Hire Me Button at the bottom */}
               <a 
@@ -261,6 +417,7 @@ const Nav = () => {
                 target="_blank" 
                 rel="noopener noreferrer"
                 onClick={closeMenu} 
+                style={{ '--menu-i': navLinks.length + 1 }}
                 className="bg-white text-black px-8 py-4 rounded-full text-xl font-bold hover:bg-zinc-200 transition-all w-full text-center block"
               >
                 Hire Me
@@ -1278,7 +1435,7 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} className="py-12 px-6 border-t border-white/10 bg-black">
+    <footer ref={footerRef} className="pt-12 px-6 border-t border-white/10 bg-black">
     <div className="max-w-6xl mx-auto">
       <div className="footer-reveal flex flex-col md:flex-row items-start justify-between gap-10 mb-10">
         <div className="flex flex-col gap-4">
@@ -1359,6 +1516,11 @@ const Footer = () => {
         <p className="text-zinc-400 text-xs">© {new Date().getFullYear()} Kaushik Funde. All rights reserved. Unauthorized copying or reuse prohibited.</p>
       </div>
     </div>
+
+      {/* Giant footer wordmark */}
+      <div className="footer-wordmark-wrap footer-reveal" aria-hidden="true">
+        <p className="footer-wordmark">Kaushik Funde</p>
+      </div>
   </footer>
   );
 };

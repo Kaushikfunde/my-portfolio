@@ -1,3 +1,305 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Scroll-triggered navbar morph (Forkfolio-style):
+   full-width transparent bar → centered rounded pill.
+   --nav-m (0→1) is driven by scroll; CSS transitions smooth it. */
+@layer components {
+  .site-nav {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 120;
+    height: 0;
+  }
+
+  .site-nav__bar {
+    --nav-m: 0;
+    --nav-mg: 0;
+    --nav-cw: 320px;
+    --nav-h: 64px;
+    --nav-h-compact: 48px;
+    --nav-mt: 8px;
+    --nav-pad: 24px;
+    --nav-pad-compact: 14px;
+    --nav-gap: 16px;
+    --nav-radius: calc(var(--nav-h-compact) / 2);
+    --nav-ease: 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    position: absolute;
+    left: 50%;
+    top: calc(var(--nav-mt) * var(--nav-m));
+    width: calc(100% - (100% - var(--nav-cw)) * var(--nav-m));
+    height: calc(var(--nav-h) - (var(--nav-h) - var(--nav-h-compact)) * var(--nav-m));
+    transform: translateX(-50%);
+    border-radius: calc(var(--nav-radius) * var(--nav-m));
+    background-color: rgba(10, 10, 10, calc(0.82 * var(--nav-mg)));
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, calc(0.1 * var(--nav-mg))),
+      0 18px 40px -24px rgba(0, 0, 0, calc(0.9 * var(--nav-mg)));
+    backdrop-filter: blur(calc(12px * var(--nav-mg)));
+    -webkit-backdrop-filter: blur(calc(12px * var(--nav-mg)));
+    transition:
+      width var(--nav-ease),
+      height var(--nav-ease),
+      top var(--nav-ease),
+      border-radius var(--nav-ease),
+      background-color var(--nav-ease),
+      box-shadow var(--nav-ease),
+      backdrop-filter var(--nav-ease),
+      -webkit-backdrop-filter var(--nav-ease);
+    will-change: width, height, top, border-radius;
+  }
+
+  .site-nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--nav-gap);
+    width: 100%;
+    max-width: 72rem;
+    height: 100%;
+    margin-inline: auto;
+    padding-inline: calc(var(--nav-pad) + (var(--nav-pad-compact) - var(--nav-pad)) * var(--nav-m));
+    transition: padding-inline var(--nav-ease);
+  }
+
+  .site-nav__links {
+    position: relative;
+  }
+
+  .site-nav__link {
+    position: relative;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding-inline: 12px;
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+
+  .site-nav__links a.site-nav__link:hover {
+    color: #fff;
+  }
+
+  @media (min-width: 1280px) {
+    .site-nav__link {
+      padding-inline: 16px;
+    }
+  }
+
+  .site-nav__pill {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    z-index: 20;
+    width: 0;
+    height: 32px;
+    border-radius: 999px;
+    background: #fff;
+    opacity: 0;
+    transform: translate3d(0, -50%, 0);
+    pointer-events: none;
+    transition:
+      transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+      width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 0.2s ease;
+  }
+
+  .site-nav__ink {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    color: #0a0a0a;
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    pointer-events: none;
+    transition:
+      clip-path 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 0.2s ease;
+  }
+
+  .site-nav__ink .site-nav__link {
+    z-index: auto;
+    color: #0a0a0a;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__pill,
+  .site-nav__ink {
+    transition: none;
+  }
+}
+
+/* Animated hamburger: three lines morph into an X inside a ring.
+   Unlayered so these transitions beat Tailwind's transition-colors utility. */
+.site-nav__burger {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin-right: -8px;
+  border-radius: 999px;
+  color: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.site-nav__burger::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.07);
+  opacity: 0;
+  transform: scale(0.72);
+  transition:
+    opacity 0.25s ease,
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.site-nav__burger:hover::before,
+.site-nav__burger:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* The reference menu drops the ring once it opens. */
+.site-nav__burger.is-open::before {
+  opacity: 0;
+  transform: scale(0.72);
+}
+
+.site-nav__burger:focus-visible {
+  outline: none;
+}
+
+.site-nav__burger-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 22px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.site-nav__burger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: 50% 50%;
+  transition:
+    transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.18s ease;
+  will-change: transform, opacity;
+}
+
+.site-nav__burger.is-open .site-nav__burger-line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.site-nav__burger.is-open .site-nav__burger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.2);
+}
+
+.site-nav__burger.is-open .site-nav__burger-line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile menu, Forkfolio-style: a black curtain wipes down over the page.
+   The menu content stays fixed in place, so links do not travel with the
+   edge — they are revealed by it and fade in from blur. Closing retracts
+   the curtain upward, leaving the links static. */
+.mobile-menu {
+  clip-path: inset(0 0 100% 0);
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+  visibility: hidden;
+  pointer-events: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  will-change: clip-path;
+  transition:
+    clip-path 0.46s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 0.46s;
+}
+
+.mobile-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-menu.is-open {
+  clip-path: inset(0 0 0 0);
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    clip-path 0.46s cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 0s;
+}
+
+.menu-inner > * {
+  opacity: 1;
+  filter: none;
+}
+
+.mobile-menu.is-open .menu-inner > * {
+  animation: menu-row-in 0.32s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation-delay: calc(0.045s + var(--menu-i, 0) * 0.035s);
+}
+
+@keyframes menu-row-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__burger::before,
+  .site-nav__burger-line,
+  .mobile-menu {
+    transition: none;
+  }
+
+  .menu-inner > * {
+    animation: none !important;
+    filter: none;
+    transform: none;
+  }
+}
+
+/* Giant closing wordmark, Forkfolio-style: fills the footer width and
+   sits flush against the bottom edge of the page. */
+.footer-wordmark-wrap {
+  container-type: inline-size;
+  max-width: 72rem;
+  margin: 3.5rem auto 0;
+  overflow: hidden;
+}
+
+.footer-wordmark {
+  margin: 0.5rem 0 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5vw;
+  font-size: 16cqw;
+  font-weight: 500;
+  line-height: 0.76;
+  letter-spacing: -0.065em;
+  text-align: center;
+  white-space: nowrap;
+  color: #161618;
+  user-select: none;
+  pointer-events: none;
+}
